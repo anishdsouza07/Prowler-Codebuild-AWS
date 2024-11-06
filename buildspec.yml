@@ -16,8 +16,8 @@ phases:
   post_build:
     commands:
       - echo "Uploading reports to S3..."
-      - aws s3 cp --exclude "*" --include "*.ocsf.json" output/ s3://${BUCKET_REPORT}/ocsf-json/ --recursive
-      - aws s3 cp --exclude "*" --include "*.json" --exclude "*.ocsf.json" --exclude "*.asff.json" output/ s3://${BUCKET_REPORT}/json/ --recursive
-      - aws s3 cp --exclude "*" --include "*.asff.json" output/ s3://${BUCKET_REPORT}/asff-json/ --recursive
+      - aws s3 cp --exclude "*" --include "*.ocsf.json" output/ s3://prowler-reports-bucket-election/ocsf-json/ --recursive
+      - aws s3 cp --exclude "*" --include "*.json" --exclude "*.ocsf.json" --exclude "*.asff.json" output/ s3://prowler-reports-bucket-election/json/ --recursive
+      - aws s3 cp --exclude "*" --include "*.asff.json" output/ s3://prowler-reports-bucket-election/asff-json/ --recursive
       - echo "Scan completed and results uploaded to S3"
       - echo "Done!"
