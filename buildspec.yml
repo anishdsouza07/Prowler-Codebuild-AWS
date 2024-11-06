@@ -22,7 +22,7 @@ phases:
         # Check if BUCKET_REPORT is set and not empty
         if [ -z "$BUCKET_REPORT" ]; then
           echo "ERROR: BUCKET_REPORT environment variable is not set"
-          export BUCKET_REPORT="your-actual-bucket-name"  # Fallback value
+          export BUCKET_REPORT="prowler-reports-bucket-election"  # Fallback value
           echo "Set fallback bucket name: $BUCKET_REPORT"
         fi
       - echo "Uploading reports to S3..."
