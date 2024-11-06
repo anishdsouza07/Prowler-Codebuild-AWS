@@ -11,26 +11,16 @@ phases:
     commands:
       - echo "Running a single account scan."
       - mkdir -p output
-      - echo "DEBUG: Printing all environment variables:"
+      - echo "DEBUG: Printing all environment variables"
       - env
-      - echo "DEBUG: BUCKET_REPORT value is '$BUCKET_REPORT'"
+      - echo "DEBUG: BUCKET_REPORT value is $BUCKET_REPORT"
       - prowler $PROWLER_OPTIONS --security-hub --compliance aws-cis-1.4 --output-directory output || true
   post_build:
     commands:
-      - echo "DEBUG: BUCKET_REPORT value before S3 upload is '$BUCKET_REPORT'"
-      - |
-        # Check if BUCKET_REPORT is set and not empty
-        if [ -z "$BUCKET_REPORT" ]; then
-          echo "ERROR: BUCKET_REPORT environment variable is not set"
-          export BUCKET_REPORT="prowler-reports-bucket-election"  # Fallback value
-          echo "Set fallback bucket name: $BUCKET_REPORT"
-        fi
+      - echo "DEBUG: BUCKET_REPORT value before S3 upload is $BUCKET_REPORT"
       - echo "Uploading reports to S3..."
-      - |
-        if [ -d "output" ]; then
-          aws s3 cp --exclude "*" --include "*.ocsf.json" output/ s3://$BUCKET_REPORT/ocsf-json/ --recursive
-          aws s3 cp --exclude "*" --include "*.json" --exclude "*.ocsf.json" --exclude "*.asff.json" output/ s3://$BUCKET_REPORT/json/ --recursive
-          aws s3 cp --exclude "*" --include "*.asff.json" output/ s3://$BUCKET_REPORT/asff-json/ --recursive
-        fi
+      - aws s3 cp --exclude "*" --include "*.ocsf.json" output/ s3://$BUCKET_REPORT/ocsf-json/ --recursive
+      - aws s3 cp --exclude "*" --include "*.json" --exclude "*.ocsf.json" --exclude "*.asff.json" output/ s3://$BUCKET_REPORT/json/ --recursive
+      - aws s3 cp --exclude "*" --include "*.asff.json" output/ s3://$BUCKET_REPORT/asff-json/ --recursive
       - echo "Scan completed"
       - echo "Done!"
