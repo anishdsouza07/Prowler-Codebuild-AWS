@@ -11,14 +11,10 @@ phases:
     commands:
       - echo "Running a single account scan."
       - mkdir -p output  # Create output directory
-      - echo "DEBUG: Printing all environment variables"
-      - env
-      - echo "DEBUG: BUCKET_REPORT value is $BUCKET_REPORT"
       - echo "Running Prowler as prowler $PROWLER_OPTIONS --role arn:$AWS_PARTITION:iam::$AWS_ACCOUNT_ID:role/service-role/$PROWLER_ROLE"
       - prowler aws --compliance cis_1.4_aws --security-hub --region us-east-1 --output-directory output || true 
   post_build:
     commands:
-      - echo "DEBUG: BUCKET_REPORT value before S3 upload is $BUCKET_REPORT"
       - echo "Uploading reports to S3..."
       - aws s3 cp --exclude "*" --include "*.ocsf.json" output/ s3://${BUCKET_REPORT}/ocsf-json/ --recursive
       - aws s3 cp --exclude "*" --include "*.json" --exclude "*.ocsf.json" --exclude "*.asff.json" output/ s3://${BUCKET_REPORT}/json/ --recursive
