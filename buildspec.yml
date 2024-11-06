@@ -10,8 +10,9 @@ phases:
   build:
     commands:
       - echo "Running a single account scan."
+      - mkdir -p output  # Create output directory
       - echo "Running Prowler as prowler $PROWLER_OPTIONS --role arn:$AWS_PARTITION:iam::$AWS_ACCOUNT_ID:role/service-role/$PROWLER_ROLE"
-      - prowler $PROWLER_OPTIONS || true
+      - prowler aws --compliance cis_1.4_aws --security-hub --region us-east-1 --output-directory output || true 
   post_build:
     commands:
       - echo "Uploading reports to S3..."
